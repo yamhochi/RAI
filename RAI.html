@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--[if !IE]><script language="Javascript">
+alert ("It looks like you aren't using Internet Explorer. To see our site correctly, please use chrome, firefox or safari.")
+</script>
+<![endif]-->
+    <title>SGS Rental Affordability Index</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="RAI.css">
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.11/themes/css/cartodb.css"/>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+
+
+</head>
+<body>
+
+<!-- set the banner on top -->
+    <div id="header">
+    <div id="headerLeft"><p><font color="#ffffff" size = "3vmin">Australia Rental Affordability Index</font></p></div>
+    <div id="headerRight"><p><a href="http://www.sgsep.com.au/" target="_blank"><font color="#92d050" size = "2vmin"><b>SGS Economics and Planning</b></font></a></p></div>
+    </div>
+    
+  
+    <div id="map"></div>
+    <div id="legend"><b>Period: 2015 2nd Quarter</b></div>
+    <div id="slider"></div>
+  
+        
+    <script src="http://libs.cartocdn.com/cartodb.js/v3/3.11/cartodb.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.1/jquery-ui.js"></script> 
+
+
+  <script>
+  //Give use feedback on slider ui
+        function changeLegend(year) {
+          $('#legend').html(year)
+        };
+  //slider function
+        function addTimeSlider(sublayer) {
+
+            var sql = new cartodb.SQL({ user: 'ay'});
+            //fetch year
+            var per = {1:"2011 1st Quarter", 2:"2011 2nd Quarter", 3:"2011 3rd Quarter", 4:"2011 4th Quarter", 5:"2012 Quarter 1", 6:"2012 2nd Quarter", 7:"2012 3rd Quarter", 8:"2012 4th Quarter", 9:"2013 1st Quarter", 10:"2013 2nd Quarter", 11:"2013 3rd Quarter", 12:"2013 4th Quarter", 13:"2014 1st Quarter", 14:"2014 2nd Quarter", 15:"2014 3rd Quarter", 16:"2014 4th Quarter", 17:"2015 1st Quarter", 18:"2015 2nd Quarter"};
+            var sl = {1:"y_2011_1", 2:"y_2011_2", 3:"y_2011_3", 4:"y_2011_4", 5:"y_2012_1", 6:"y_2012_2", 7:"y_2012_3", 8:"y_2012_4", 9:"y_2013_1", 10:"y_2013_2", 11:"y_2013_3", 12:"y_2013_4", 13:"y_2014_1", 14:"y_2014_2", 15:"y_2014_3", 16:"y_2014_4", 17:"y_2015_1", 18:"y_2015_2"};
+
+            //set interactivity for base layer
+            var value=18
+            console.log(value)
+            // sublayer.set({ 'interactivity': ['the_geom_webmercator,"'+sl[value]+'"']});
+
+            sql.execute("select * from combined_1", function(data) {
+                $("#slider").slider({
+                  range: "min",
+                  value: value,
+                  min: 1,
+                  max: 18,
+                  slide: function (event, ui ){
+                     // $("#amount").val( "$" + ui.value );
+                     value=ui.value
+                     console.log(sl[value]);
+                     console.log(value);
+                     // build sql
+                    sublayer.setCartoCSS("#au_combined_copy{polygon-fill: #FFFFB2; polygon-opacity: 0.8; line-color: #FFF; line-width: 0.5; line-opacity: 1; } #au_combined_copy [ '"+sl[value]+"' <= 1000] {polygon-fill: #1a9850; } #au_combined_copy [ '"+sl[value]+"' <= 200] {polygon-fill: #66bd63; } #au_combined_copy [ '"+sl[value]+"' <= 150] {polygon-fill: #d9ef8b; } #au_combined_copy [ '"+sl[value]+"' <= 120] {polygon-fill: #fee08b; } #au_combined_copy [ '"+sl[value]+"' <= 100] {polygon-fill: #fdae61; } #au_combined_copy [ '"+sl[value]+"'<= 80] {polygon-fill: #f46d43; } #au_combined_copy [ '"+sl[value]+"'<= 50] {polygon-fill: #d73027;} #au_combined_copy [ '"+sl[value]+"'<= 1] {polygon-fill: #e6e6e6; }");
+                    // sublayer.setCartoCSS("#au_combined_copy{polygon-fill: #FFFFB2; polygon-opacity: 0.8; line-color: #FFF; line-width: 0.5; line-opacity: 0.2; } #au_combined_copy [ '"+sl[value]+"' <= 200] {polygon-fill: #fecc5c; } #au_combined_copy [ '"+sl[value]+"'<= 150] {polygon-fill: #fd8d3c; } #au_combined_copy [ '"+sl[value]+"'<= 100] {polygon-fill: #bd0026; #au_combined_copy [ '"+sl[value]+"'<= 50] {polygon-fill: #e31a1c;} #au_combined_copy [ '"+sl[value]+"'<= 1] {polygon-fill: #d9d9d9;}"); 
+                    changeLegend("<b>Period: "+per[value]+"</b>");
+
+                  //specify tooltip within clicked function
+                  sublayer.setInteraction(true);
+                  sublayer.set({ 'interactivity': ['the_geom_webmercator,combined_code, definition, name, state,'+sl[value]]});
+
+                  if(i!==undefined){
+                      i.clean()
+                    }
+                 
+                 var i = new cdb.geo.ui.Tooltip({
+                  layer: sublayer,
+                  template: '<h1><b>{{definition}}:</b> {{name}}</h1><h1><b>State:</b> {{state}}</h1><h1><b>RAI at '+per[value]+': </b>{{'+sl[value]+'}}</h1>',
+                  // width: 100,
+                  // position: 'bottom|right',
+                  });
+                  $('body').append(i.render().el);
+
+                  }
+                });
+              });
+              //set tooltip outside clicked function
+            sublayer.setCartoCSS("#au_combined_copy{polygon-fill: #FFFFB2; polygon-opacity: 0.8; line-color: #FFF; line-width: 0.5; line-opacity: 1; }  #au_combined_copy [ '"+sl[value]+"' <= 1000] {polygon-fill: #1a9850; }#au_combined_copy [ '"+sl[value]+"' <= 200] {polygon-fill: #66bd63; } #au_combined_copy [ '"+sl[value]+"' <= 150] {polygon-fill: #d9ef8b; } #au_combined_copy [ '"+sl[value]+"' <= 120] {polygon-fill: #fee08b; } #au_combined_copy [ '"+sl[value]+"' <= 100] {polygon-fill: #fdae61; } #au_combined_copy [ '"+sl[value]+"'<= 80] {polygon-fill: #f46d43; } #au_combined_copy [ '"+sl[value]+"'<= 50] {polygon-fill: #d73027;}  #au_combined_copy [ '"+sl[value]+"'<= 50] {polygon-fill: #bd0026;}#au_combined_copy [ '"+sl[value]+"'<= 1] {polygon-fill: #e6e6e6; }");
+            sublayer.setInteraction(true);
+            sublayer.set({ 'interactivity': ['the_geom_webmercator,combined_code, definition, name, state,'+sl[value]]});
+
+            if(i!==undefined){
+                      i.clean()
+                    }
+
+            var i = new cdb.geo.ui.Tooltip({
+                  layer: sublayer,
+                  template: '<h1><b>{{definition}}:</b> {{name}}</h1><h1><b>State:</b> {{state}}</h1><h1><b>RAI at '+per[value]+': </b>{{'+sl[value]+'}}</h1>',
+                  // width: 100,
+                  // width: 100,
+                  // position: 'bottom|right',
+              });
+
+            $('body').append(i.render().el);
+                }
+
+
+
+    window.onload = function(){
+        var southWest = L.latLng(-45.448991, 102.893995),
+            northEast = L.latLng(-8.958098, 158.721477),
+            bounds = L.latLngBounds(southWest, northEast);
+            var map = new L.Map('map', {
+                zoomControl: true,
+                center: [-28.733279, 138.106892],
+                zoom: 4,
+                minZoom:4,
+                maxBounds: bounds,
+
+              });
+
+
+              L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>; Made by <a href="http://sgsep.com.au "target="_blank">SGS Economics & Planning</a> What is <a href="http://www.sgsep.com.au/insights/rental-affordability-index/" target="_blank">Retal Affordability Index?</a>'
+              }).addTo(map);
+
+
+            cartodb.createLayer(map, 'https://ay.cartodb.com/api/v2/viz/238bcc88-7306-11e5-be0a-0e5db1731f59/viz.json')
+                .addTo(map)
+                .on('done', function(layer) {
+                  //do stuff
+                  //define sublayer
+                  addTimeSlider(layer.getSubLayer(0));
+                  })
+                //log error
+                .on('error', function(err) {
+                  alert("some error occurred: " + err);
+                });
+                var topLayer = new L.tileLayer('http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+                  maxZoom: 17
+                }).addTo(map);
+                topLayer.setZIndex(7);
+            }
+
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,146 @@
+      html, body{
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        }
+
+        #map {
+          position: relative;          
+          height: -o-calc(100% - 41px ); /* opera  */ 
+          height: -webkit-calc(100% - 41px ); /* google, safari - note: 20px header, 20px attribute, 1px border; */
+          height: -moz-calc(100% - 41px ); /* firefox */
+          padding: 0;
+          width:100%;
+        }
+
+         #header {
+          overflow-y: hidden;
+          width: 80%;
+          border-bottom: 1px solid #B8E68A;
+          opacity: 0.85;
+          background-color: #151515;
+          height: 20px;
+          margin: auto;
+          padding-top:10px;
+          padding-left: 10%;
+          padding-right: 10%;
+          padding-bottom:10px;
+          box-shadow: 3px 3px 10px -5px rgba(0,0,0,0.49);
+        }
+
+        #headerLeft p{
+            overflow-y: hidden;
+            background-color: #151515;
+            /*opacity: 0;*/
+            float:left;
+            padding: 0;
+            margin: 0;
+            line-height: "Npx";
+            /*display: inline;*/
+            width: 60%;
+            height: auto;
+            font-family:'Roboto', sans-serif;  
+            /*font size: :4pt;
+            font size: :.5vh;*/  
+        }
+
+         #headerRight p{
+            overflow-y: hidden;
+            background-color: #151515;
+            padding: 0;
+            margin: 0;
+            line-height: "Npx";
+            /*display: inline;*/
+            width: 40%;
+            height: auto;
+            font-family:'Roboto', sans-serif;
+            font size: :2.5pt;
+            font size: :.3vh;  
+            /*width:30%;*/
+        }
+        #legend{
+          position: relative;
+          left:6%;
+          bottom:90px;
+          width: 69%;
+          /*background-color: #fefefe;*/
+          border-width: 1px;
+          font-family:'Roboto', sans-serif; 
+          font color: #ffffff; 
+          /*font-size: 5pt*/
+        }
+
+/*        #legend p{
+          font-family:'Roboto', sans-serif; 
+
+        }*/
+
+        #slider{
+          position: relative;
+          left:5%;
+          bottom:80px;
+          width: -o-calc(0.9*(100% - 300px)); /* opera */
+          width: -webkit-calc(0.9*(100% - 300px));  /* google, safari */
+          width: -moz-calc(0.9*(100% - 300px)); ; /* firefox */
+          /*width: 100%-20px; */
+        }
+
+         div.cartodb-tooltip { 
+          position: absolute;     
+          text-align: left;
+          width: auto;          
+          height: auto; 
+          margin: 0px;        
+          padding: 6px;      
+          font-family:'Roboto', sans-serif;    
+          background: #f0f0f0;
+          border: 0px;    
+          box-shadow: 3px 3px 10px -5px rgba(0,0,0,0.49);
+          pointer-events: none;  
+          opacity: 1;  
+          left: 100px;
+          top: 100px;
+          /*font-size:14px;*/
+          font-weight: 400;
+          z-index: 4;
+        }
+
+        div.cartodb-tooltip h1{
+          padding:0;
+          line-height:100%;     
+          font-size:13px;
+          font-weight: 400;
+        }
+
+        div.cartodb-tooltip h2{
+          padding:0;
+          font-size:10px;
+          font-weight: 400;
+        }
+
+        div.cartodb-tooltip h3{
+          padding:0;
+          line-height:0.2;
+          font-size:9px;
+          font-weight:400;
+        } 
+
+        div.cartodb-tooltip h4{
+          padding:0;
+          font-size:9px;
+          font-weight:100;
+          font-style:italic;
+        }
+
+        div.cartodb-tooltip p{
+          padding:0;
+          font-size:9px;
+          font-weight:100;
+          font-style:italic;
+        }
+        /* Important for interactivity: */
+        .leaflet-top-pane {
+        pointer-events: none;
+        }
+
